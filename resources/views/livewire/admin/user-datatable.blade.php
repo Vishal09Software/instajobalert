@@ -1,0 +1,231 @@
+<div>
+   @include('admin.layouts.badge')
+    <!-- Top Controls: Show entries and Search -->
+    <div class="row mb-3 align-items-end">
+        <div class="col-12 col-md-3">
+            <!-- Left: Page length -->
+            <div class="dataTables_length">
+                <label class="form-label mb-0">
+                    Show
+                    <select wire:model.live="perPage" class="form-select form-select-sm d-inline-block w-auto mx-1">
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                    entries
+                </label>
+            </div>
+        </div>
+
+        <!-- Middle: Role and Status filter (side by side, with some gap) -->
+        <div class="col-12 col-md-6 d-flex flex-wrap justify-content-center gap-2">
+            <div class="dataTables_filter">
+                <label class="form-label mb-0">
+                    Role:
+                    <select wire:model.live="roleFilter" class="form-select form-select-sm d-inline-block w-auto ms-1">
+                        <option value="">All Roles</option>
+                        <option value="1">Admin</option>
+                        <option value="2">User</option>
+                        <option value="3">Moderator</option>
+                    </select>
+                </label>
+            </div>
+            <div class="dataTables_filter">
+                <label class="form-label mb-0">
+                    Status:
+                    <select wire:model.live="statusFilter" class="form-select form-select-sm d-inline-block w-auto ms-1">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-3">
+            <!-- Right: Search -->
+            <div class="dataTables_filter d-flex justify-content-md-end">
+                <label class="form-label mb-0 d-flex align-items-center w-100">
+                    <span class="me-2">Search:</span>
+                    <input type="search"
+                        wire:model.live.debounce.300ms="search"
+                        class="form-control form-control-sm d-inline-block w-auto"
+                        placeholder=""
+                        style="min-width: 120px;">
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bulk Actions -->
+    @if (count($selectedIds) > 0)
+        <div class="mb-3">
+            <button wire:click="confirmBulkDelete" class="btn btn-danger btn-sm">
+                <i class="bi bi-trash me-1"></i>
+                Delete Selected ({{ count($selectedIds) }})
+            </button>
+        </div>
+    @endif
+
+    <!-- Data Table -->
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered table-hover" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">
+                        <input type="checkbox"
+                            wire:model.live="selectAll"
+                            wire:click="toggleSelectAll"
+                            class="form-check-input">
+                    </th>
+                    <th wire:click="sortBy('id')" style="cursor: pointer;" class="user-select-none">
+                        ID
+                        @if ($sortField === 'id')
+                            <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}-short"></i>
+                        @endif
+                    </th>
+                    <th wire:click="sortBy('name')" style="cursor: pointer;" class="user-select-none">
+                        Name
+                        @if ($sortField === 'name')
+                            <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}-short"></i>
+                        @endif
+                    </th>
+                    <th wire:click="sortBy('email')" style="cursor: pointer;" class="user-select-none">
+                        Email
+                        @if ($sortField === 'email')
+                            <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}-short"></i>
+                        @endif
+                    </th>
+                    <th wire:click="sortBy('status')" style="cursor: pointer;" class="user-select-none">
+                        Status
+                        @if ($sortField === 'status')
+                            <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}-short"></i>
+                        @endif
+                    </th>
+                    <th wire:click="sortBy('created_at')" style="cursor: pointer;" class="user-select-none">
+                        Created At
+                        @if ($sortField === 'created_at')
+                            <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}-short"></i>
+                        @endif
+                    </th>
+                    <th style="width: 120px;">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($users as $user)
+                    <tr>
+                        <td>
+                            <input type="checkbox"
+                                wire:model.live="selectedIds"
+                                value="{{ $user->id }}"
+                                class="form-check-input">
+                        </td>
+                        <td>{{ $loop->iteration + ($users->currentPage() - 1) * $users->perPage() }}</td>
+                        <td><strong>{{ $user->name }}</strong></td>
+                        <td>{{ $user->email }}</td>
+
+                        <td>
+                            <select class="form-select form-select-sm" wire:change="updateStatus({{ $user->id }}, $event.target.value)">
+                                <option value="active" {{ $user->status == 'active' ? 'selected' : '' }}>Active</option>
+                                <option value="inactive" {{ $user->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                                <option value="suspended" {{ $user->status == 'suspended' ? 'selected' : '' }}>Suspended</option>
+                            </select>
+                        </td>
+                        <td>
+                            @if($user->created_at)
+                                {{ \Carbon\Carbon::parse($user->created_at)->format('M d, Y') }}
+                            @else
+                                <span class="text-muted">-</span>
+                            @endif
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <a href="{{ route('users.edit', $user->id) }}"
+                                    class="btn btn-outline-success"
+                                    title="Edit"
+                                    style="padding: 0.25rem 0.5rem;">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <button wire:click="confirmDelete({{ $user->id }})"
+                                    class="btn btn-outline-danger"
+                                    title="Delete"
+                                    style="padding: 0.25rem 0.5rem;">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="8" class="text-center py-5">
+                            <i class="bi bi-inbox fs-1 text-muted d-block mb-2"></i>
+                            <p class="text-muted mb-0">No users found</p>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination Info and Controls -->
+    <div class="row mt-3">
+        <div class="col-sm-12 col-md-12">
+            <div class="dataTables_paginate paging_simple_numbers">
+                <x-pagination :items="$users" livewire="true" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    @if ($showDeleteModal)
+        <x-modal
+            id="deleteModal"
+            title="Delete User"
+            :show="$showDeleteModal"
+            :wireIgnore="true"
+            backdrop='$set("showDeleteModal", false)'
+            closeAction='$set("showDeleteModal", false)'>
+            <p>Are you sure you want to delete this user? This action cannot be undone.</p>
+
+            <x-slot name="footer">
+                <button type="button" class="btn btn-secondary" wire:click="$set('showDeleteModal', false)">Cancel</button>
+                <button type="button" class="btn btn-danger" wire:click="delete({{ $userId }})">
+                    <span wire:loading.remove wire:target="delete">Delete</span>
+                    <span wire:loading wire:target="delete">
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                        Deleting...
+                    </span>
+                </button>
+            </x-slot>
+        </x-modal>
+    @endif
+
+    <!-- Bulk Delete Confirmation Modal -->
+    @if ($showBulkDeleteModal)
+        <x-modal
+            id="bulkDeleteModal"
+            title="Delete Users"
+            :show="$showBulkDeleteModal"
+            :wireIgnore="true"
+            backdrop='$set("showBulkDeleteModal", false)'
+            closeAction='$set("showBulkDeleteModal", false)'>
+            <p>Are you sure you want to delete <strong>{{ count($selectedIds) }}</strong> selected user(s)? This action cannot be undone.</p>
+
+            <x-slot name="footer">
+                <button type="button" class="btn btn-secondary" wire:click="$set('showBulkDeleteModal', false)">Cancel</button>
+                <button type="button" class="btn btn-danger" wire:click="bulkDelete">
+                    <span wire:loading.remove wire:target="bulkDelete">Delete All</span>
+                    <span wire:loading wire:target="bulkDelete">
+                        <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                        Deleting...
+                    </span>
+                </button>
+            </x-slot>
+        </x-modal>
+    @endif
+
+</div>
+
