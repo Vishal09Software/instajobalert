@@ -40,4 +40,6 @@ return [
         'address' => 'C-61, Sector-C, R K Colony, Bhilwara, Rajasthan 311001',
     ],
 
+    'openkey' => env('OPENROUTER_API_KEY')
+
 ];

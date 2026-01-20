@@ -164,7 +164,7 @@
 
                                 <div class="col-md-12 mb-3">
                                     <label for="description" class="form-label">Description</label>
-                                    <x-rich-editor name="description" id="description" :value="old('description')" placeholder="Enter job description" />
+                                    <x-rich-editor name="description" id="editor" :value="old('description')" placeholder="Enter job description" />
                                     @error('description')
                                         <small class="text-danger d-block">{{ $message }}</small>
                                     @enderror

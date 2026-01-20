@@ -80,10 +80,13 @@
                     </a>
                 </li>
 
-
-
-
-
+                <li class="menu-title"><span data-key="t-setting">Setting</span></li>
+                <li class="nav-item">
+                    <a class="nav-link menu-link" href="{{ route('settings.index') }}">
+                        <i class="ri-settings-line"></i>
+                        <span data-key="t-setting">Setting</span>
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- Sidebar -->

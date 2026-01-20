@@ -47,12 +47,12 @@
 </script>
 
 <!-- Place the first <script> tag in your HTML's <head> -->
-    <script src="https://cdn.tiny.cloud/1/tiet9qauswpk6vc5sg5njp2z3xekpixcpe9kgee0ty67zcba/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
+    <script src="https://cdn.tiny.cloud/1/ydfhstysp94yw51q20r9zwujx3syqlsows74pven6jrhporl/tinymce/8/tinymce.min.js" referrerpolicy="origin" crossorigin="anonymous"></script>
 
     <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
     <script>
       tinymce.init({
-        selector: 'textarea',
+        selector: 'textarea[id="editor"]',
         plugins: [
           // Core editing features
           'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'searchreplace', 'table', 'visualblocks', 'wordcount',

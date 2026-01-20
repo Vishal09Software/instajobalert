@@ -50,13 +50,7 @@
                                         <small class="text-danger d-block">{{ $message }}</small>
                                     @enderror
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="icon" class="form-label">Icon</label>
-                                    <x-input type="text" name="icon" id="icon" :value="old('icon')" placeholder="Enter icon class e.g. bi bi-folder" />
-                                    @error('icon')
-                                        <small class="text-danger d-block">{{ $message }}</small>
-                                    @enderror
-                                </div>
+                                
                             </div>
 
                                 <div class="form-check form-switch form-switch-md mb-3">

@@ -25,7 +25,6 @@ class StoreSkillRequest extends FormRequest
         return [
             'title' => 'required|string|max:255|unique:skills,title',
             'slug' => 'required|string|max:255|unique:skills,slug|regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
-            'icon' => 'nullable|string|max:255',
             'status' => 'required|boolean',
         ];
     }
@@ -45,7 +44,6 @@ class StoreSkillRequest extends FormRequest
             'slug.max' => 'The slug may not be greater than 255 characters.',
             'slug.unique' => 'The slug has already been taken.',
             'slug.regex' => 'The slug may only contain lowercase letters, numbers, and hyphens.',
-            'icon.max' => 'The icon may not be greater than 255 characters.',
             'status.required' => 'The status field is required.',
             'status.boolean' => 'The status must be true or false.',
         ];
@@ -61,7 +59,6 @@ class StoreSkillRequest extends FormRequest
         return [
             'title' => 'skill title',
             'slug' => 'slug',
-            'icon' => 'icon',
             'status' => 'status',
         ];
     }

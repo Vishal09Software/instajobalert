@@ -204,7 +204,7 @@ class HomeController extends Controller
 
         $curl = curl_init();
 
-        $apiKey = "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";
+        $apiKey = config('services.openkey');
         $url = "https://openrouter.ai/api/v1/chat/completions";
 
         $postData = [

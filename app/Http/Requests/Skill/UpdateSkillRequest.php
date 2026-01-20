@@ -41,7 +41,6 @@ class UpdateSkillRequest extends FormRequest
                 'regex:/^[a-z0-9]+(?:-[a-z0-9]+)*$/',
                 Rule::unique('skills', 'slug')->ignore($skillId),
             ],
-            'icon' => 'nullable|string|max:255',
         ];
     }
 
@@ -60,7 +59,6 @@ class UpdateSkillRequest extends FormRequest
             'slug.max' => 'The slug may not be greater than 255 characters.',
             'slug.unique' => 'The slug has already been taken.',
             'slug.regex' => 'The slug may only contain lowercase letters, numbers, and hyphens.',
-            'icon.max' => 'The icon may not be greater than 255 characters.',
         ];
     }
 
@@ -74,7 +72,6 @@ class UpdateSkillRequest extends FormRequest
         return [
             'title' => 'skill title',
             'slug' => 'slug',
-            'icon' => 'icon',
             'status' => 'status',
         ];
     }

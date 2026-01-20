@@ -70,7 +70,6 @@
                             <i class="bi bi-arrow-{{ $sortDirection === 'asc' ? 'up' : 'down' }}-short"></i>
                         @endif
                     </th>
-                    <th>Icon</th>
                     <th wire:click="sortBy('status')" style="cursor: pointer;" class="user-select-none">
                         Status
                         @if ($sortField === 'status')
@@ -92,13 +91,6 @@
                         <td>{{ $loop->iteration + ($skills->currentPage() - 1) * $skills->perPage() }}</td>
                         <td><strong>{{ $skill->title }}</strong></td>
                         <td><code class="text-muted">{{ $skill->slug }}</code></td>
-                        <td>
-                            @if ($skill->icon)
-                                <i class="{{ $skill->icon }} fs-5"></i>
-                            @else
-                                <span class="text-muted">-</span>
-                            @endif
-                        </td>
                         <td>
                             <div class="form-check form-switch m-0">
                                 <input

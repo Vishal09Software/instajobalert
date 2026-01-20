@@ -7,7 +7,7 @@ use App\Models\Occupation;
 
 class Skill extends Model
 {
-    protected $fillable = ['title', 'slug', 'icon', 'status'];
+    protected $fillable = ['title', 'slug', 'status'];
 
     public function occupations()
     {

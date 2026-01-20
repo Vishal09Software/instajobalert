@@ -169,7 +169,7 @@
 
                                 <div class="col-md-12 mb-3">
                                     <label for="description" class="form-label">Description</label>
-                                    <textarea name="description" id="description" class="form-control" rows="5" placeholder="Enter job description">{{ $job->description }}</textarea>
+                                    <x-rich-editor name="description" id="editor" :value="$job->description" placeholder="Enter job description" />
                                     @error('description')
                                         <small class="text-danger d-block">{{ $message }}</small>
                                     @enderror

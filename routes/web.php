@@ -8,7 +8,8 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobTypeController;
 use App\Http\Controllers\SkillController;
-
+use App\Http\Controllers\SettingController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/phpinfo', function () {
     return phpinfo();
@@ -51,11 +52,13 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('users', UserController::class);
     Route::resource('categories', CategoryController::class)->except(['show']);
     Route::resource('jobs', JobController::class)->except(['show']);
     Route::resource('job-types', JobTypeController::class)->except(['show']);
     Route::resource('skills', SkillController::class)->except(['show']);
 
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 });
