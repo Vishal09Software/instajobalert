@@ -34,7 +34,7 @@ class StoreJobRequest extends FormRequest
             'job_id' => 'required|string|max:255|unique:linked_ins,job_id',
             'posted_at' => 'nullable|date',
             'expires_at' => 'nullable|date|after:posted_at',
-            'employment_type' => 'nullable|string|max:255',
+            'employment_type_id' => 'nullable|exists:job_types,id',
             'seniority_level' => 'nullable|string|max:255',
             'category_id' => 'nullable|exists:job_categories,id',
         ];

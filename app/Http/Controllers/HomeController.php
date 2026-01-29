@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
+use App\Services\SeoGeneratorService;
 
 
 class HomeController extends Controller
@@ -198,102 +199,12 @@ class HomeController extends Controller
         return view('frontend.test');
     }
 
-    public function seoGeneratorAPI(Request $request)
+    public function seoGeneratorAPI(Request $request, SeoGeneratorService $seoGeneratorService)
     {
-        $query = $request->input('query', 'What is in this image and video?');
+        $query = $request->input('query');
 
-        $curl = curl_init();
+        $seoData = $seoGeneratorService->generateSeoContent($query);
 
-        $apiKey = config('services.openkey');
-        $url = "https://openrouter.ai/api/v1/chat/completions";
-
-        $postData = [
-            "model" => "allenai/molmo-2-8b:free",
-            "messages" => [
-                [
-                    "role" => "user",
-                    "content" => [
-                        [
-                            "type" => "text",
-                            "text" => "Generate a SEO friendly title, description, keywords, and Open Graph values for the following query: " . $query
-                        ]
-                    ]
-                ]
-            ]
-        ];
-
-        curl_setopt_array($curl, [
-            CURLOPT_URL => $url,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_POST => true,
-            CURLOPT_HTTPHEADER => [
-                "Content-Type: application/json",
-                "Authorization: Bearer {$apiKey}"
-            ],
-            CURLOPT_POSTFIELDS => json_encode($postData),
-        ]);
-
-        $response = curl_exec($curl);
-        $err = curl_error($curl);
-        curl_close($curl);
-
-        if ($err) {
-            return response()->json(['error' => $err], 500);
-        }
-
-        $data = json_decode($response, true);
-
-        // Extract answer for SEO
-        $answer = '';
-        if (isset($data['choices'][0]['message']['content'])) {
-            $content = $data['choices'][0]['message']['content'];
-            if (is_array($content)) {
-                // If content is array, extract text from it
-                foreach ($content as $item) {
-                    if (isset($item['type']) && $item['type'] === 'text' && isset($item['text'])) {
-                        $answer = $item['text'];
-                        break;
-                    }
-                }
-            } else {
-                $answer = $content;
-            }
-        }
-
-        // Generate SEO keywords
-        $keywords = $this->generateSEOKeywords($query, $answer);
-
-        // Generate SEO and Open Graph values
-        $data['seo'] = [
-            'title' => $query . ' - AI Answer',
-            'description' => substr(strip_tags($answer), 0, 160) ?: 'Get AI-powered answers to your questions',
-            'keywords' => $keywords,
-        ];
-
-        $data['og'] = [
-            'title' => $query,
-            'description' => substr(strip_tags($answer), 0, 200) ?: 'AI-generated answer',
-            'type' => 'website',
-            'url' => url()->current(),
-        ];
-
-        $data['answer'] = $answer;
-
-        return response()->json($data);
+        return response()->json($seoData);
     }
-
-    private function generateSEOKeywords($query, $answer)
-    {
-        // Extract keywords from query and answer
-        $text = strtolower($query . ' ' . $answer);
-        $words = preg_split('/\s+/', $text);
-        $words = array_filter($words, function($word) {
-            $word = preg_replace('/[^a-z0-9]/', '', $word);
-            return strlen($word) > 3 && !in_array($word, ['the', 'and', 'are', 'for', 'with', 'that', 'this', 'from', 'have', 'been', 'will', 'would', 'could', 'should', 'what', 'when', 'where', 'which', 'who', 'why', 'how']);
-        });
-
-        $keywords = array_slice(array_unique($words), 0, 10);
-        return implode(', ', $keywords);
-    }
-
 }

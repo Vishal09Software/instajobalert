@@ -36,7 +36,7 @@
                             @csrf
 
                             <div class="row">
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="title" class="form-label">Title <span class="text-danger">*</span></label>
                                     <x-input type="text" name="title" id="title" :value="old('title')" required autofocus placeholder="Enter job title" />
                                     @error('title')
@@ -44,7 +44,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="slug" class="form-label">Slug</label>
                                     <x-input type="text" name="slug" id="slug" :value="old('slug')" placeholder="Auto-generated from title" />
                                     @error('slug')
@@ -52,7 +52,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="job_id" class="form-label">Job ID <span class="text-danger">*</span></label>
                                     <x-input type="text" name="job_id" id="job_id" :value="old('job_id')" required placeholder="Enter LinkedIn job ID" />
                                     @error('job_id')
@@ -60,7 +60,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="category_id" class="form-label">Category</label>
                                     <select name="category_id" id="category_id" class="form-select">
                                         <option value="">-- Select Category --</option>
@@ -75,7 +75,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="company" class="form-label">Company</label>
                                     <x-input type="text" name="company" id="company" :value="old('company')" placeholder="Enter company name" />
                                     @error('company')
@@ -83,7 +83,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="location" class="form-label">Location</label>
                                     <x-input type="text" name="location" id="location" :value="old('location')" placeholder="Enter job location" />
                                     @error('location')
@@ -91,7 +91,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="type" class="form-label">Type</label>
                                     <x-input type="text" name="type" id="type" :value="old('type')" placeholder="Enter job type" />
                                     @error('type')
@@ -99,7 +99,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="amount" class="form-label">Amount/Salary</label>
                                     <x-input type="text" name="amount" id="amount" :value="old('amount')" placeholder="Enter salary/amount" />
                                     @error('amount')
@@ -107,22 +107,22 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="employment_type" class="form-label">Employment Type</label>
-                                    <select name="employment_type" id="employment_type" class="form-select">
+                                    <select name="employment_type_id" id="employment_type_id" class="form-select">
                                         <option value="">-- Select Type --</option>
-                                        <option value="Full-time" {{ old('employment_type') == 'Full-time' ? 'selected' : '' }}>Full-time</option>
-                                        <option value="Part-time" {{ old('employment_type') == 'Part-time' ? 'selected' : '' }}>Part-time</option>
-                                        <option value="Contract" {{ old('employment_type') == 'Contract' ? 'selected' : '' }}>Contract</option>
-                                        <option value="Temporary" {{ old('employment_type') == 'Temporary' ? 'selected' : '' }}>Temporary</option>
-                                        <option value="Internship" {{ old('employment_type') == 'Internship' ? 'selected' : '' }}>Internship</option>
+                                        @foreach($employmentTypes as $employmentType)
+                                            <option value="{{ $employmentType->id }}" {{ old('employment_type_id') == $employmentType->id ? 'selected' : '' }}>
+                                                {{ $employmentType->title }}
+                                            </option>
+                                        @endforeach
                                     </select>
-                                    @error('employment_type')
+                                    @error('employment_type_id')
                                         <small class="text-danger d-block">{{ $message }}</small>
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="seniority_level" class="form-label">Seniority Level</label>
                                     <select name="seniority_level" id="seniority_level" class="form-select">
                                         <option value="">-- Select Level --</option>
@@ -138,7 +138,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="posted_at" class="form-label">Posted At</label>
                                     <x-input type="datetime-local" name="posted_at" id="posted_at" :value="old('posted_at')" />
                                     @error('posted_at')
@@ -146,7 +146,7 @@
                                     @enderror
                                 </div>
 
-                                <div class="col-md-6 mb-3">
+                                <div class="col-md-4 mb-3">
                                     <label for="expires_at" class="form-label">Expires At</label>
                                     <x-input type="datetime-local" name="expires_at" id="expires_at" :value="old('expires_at')" />
                                     @error('expires_at')

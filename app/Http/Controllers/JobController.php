@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Occupation;
 use App\Models\JobCategory;
+use App\Models\JobType;
 use App\Http\Requests\Job\StoreJobRequest;
 use App\Http\Requests\Job\UpdateJobRequest;
 
@@ -18,7 +19,8 @@ class JobController extends Controller
     public function create()
     {
         $categories = JobCategory::where('status', true)->orderBy('title')->get();
-        return view('admin.job.create', compact('categories'));
+        $employmentTypes = JobType::where('status', true)->orderBy('title')->get();
+        return view('admin.job.create', compact('categories', 'employmentTypes'));
     }
 
     public function store(StoreJobRequest $request)
@@ -40,7 +42,8 @@ class JobController extends Controller
     public function edit(Occupation $job)
     {
         $categories = JobCategory::where('status', true)->orderBy('title')->get();
-        return view('admin.job.edit', compact('job', 'categories'));
+        $employmentTypes = JobType::where('status', true)->orderBy('title')->get();
+        return view('admin.job.edit', compact('job', 'categories', 'employmentTypes'));
     }
 
     public function update(UpdateJobRequest $request, Occupation $job)
